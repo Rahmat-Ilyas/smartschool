@@ -1,10 +1,19 @@
+@php
+if (session('superadmin') && !session('identitas_sekolah')) {
+    header('Location: ' . url('/set-sys'));
+    exit();
+}
+
+$skl = session('identitas_sekolah');
+$sekolah = new App\Models\IdentitasSekolah();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <base href="">
     <meta charset="utf-8" />
-    <title>Metronic | Dashboard</title>
+    <title>Smart School</title>
     <meta name="description" content="Updates and statistics" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!--begin::Fonts-->
@@ -27,8 +36,12 @@
         type="text/css" />
     <link href="{{ asset('assets/css/themes/layout/brand/dark.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/themes/layout/aside/dark.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
+
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css?v=7.0.5') }}" rel="stylesheet"
+        type="text/css" />
     <!--end::Layout Themes-->
-    <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
+    {{-- <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" /> --}}
+    <link rel="shortcut icon" href="{{ asset('assets/media/logos/logo-fav.png') }}" />
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -87,8 +100,8 @@
                 <!--begin::Brand-->
                 <div class="brand flex-column-auto" id="kt_brand">
                     <!--begin::Logo-->
-                    <a href="index.html" class="brand-logo">
-                        <img alt="Logo" src="{{ asset('assets/media/logos/logo-light.png') }}" />
+                    <a href="{{ url('admin/' . $skl->keyword) }}" class="brand-logo" class="text-center">
+                        <img alt="Logo" src="{{ asset('assets/media/logos/logo-dsw.png') }}" height="32" />
                     </a>
                     <!--end::Logo-->
                     <!--begin::Toggle-->
@@ -121,49 +134,87 @@
                     <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1"
                         data-menu-dropdown-timeout="500">
                         <!--begin::Menu Nav-->
-                        <ul class="menu-nav">
-                            <li class="menu-item menu-item-active" aria-haspopup="true">
-                                <a href="index.html" class="menu-link">
+                        <ul class="menu-nav py-0">
+                            <li class="menu-section mt-0">
+                                <h4 class="menu-text">Main Menu</h4>
+                                <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                            </li>
+                            <li class="menu-item" id="nav-home" aria-haspopup="true">
+                                <a href="{{ url('admin/' . $skl->keyword) }}" class="menu-link">
                                     <span class="menu-icon">
                                         <i class="flaticon-home-2"></i>
                                     </span>
                                     <span class="menu-text">Dashboard</span>
                                 </a>
                             </li>
-                            <li class="menu-section">
-                                <h4 class="menu-text">Main Menu</h4>
-                                <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
-                            </li>
                             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                                <a href="javascript:;" class="menu-link menu-toggle">
+                                <a href="#" class="menu-link menu-toggle">
                                     <span class="menu-icon">
                                         <i class="flaticon-file-2"></i>
                                     </span>
-                                    <span class="menu-text">Themes</span>
+                                    <span class="menu-text">Referensi</span>
                                     <i class="menu-arrow"></i>
                                 </a>
                                 <div class="menu-submenu">
                                     <i class="menu-arrow"></i>
                                     <ul class="menu-subnav">
-                                        <li class="menu-item menu-item-parent" aria-haspopup="true">
-                                            <span class="menu-link">
-                                                <span class="menu-text">Themes</span>
-                                            </span>
-                                        </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/themes/aside-light.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">Light Aside</span>
+                                        <li class="menu-item" id="nav-sekolah" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/sekolah') }}"
+                                                class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Sekolah</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/themes/header-dark.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">Dark Header</span>
+                                        <li class="menu-item" id="nav-tingkat" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/tingkat') }}"
+                                                class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Tingkat</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-akademik" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/akademik') }}"
+                                                class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Akademik</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-gedung" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/gedung') }}"
+                                                class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Gedung</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-ruangan" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/ruangan') }}"
+                                                class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Ruangan</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-jenis-ptk" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/jenis-ptk') }}" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jenis PTK</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-jurusan" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/jurusan') }}" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jurusan</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-kelas" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/kelas') }}" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kelas</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" id="nav-kepegawaian" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/referensi/kepegawaian') }}" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kepegawaian</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -174,63 +225,908 @@
                                     <span class="menu-icon">
                                         <i class="flaticon-tool" aria-hidden="true"></i>
                                     </span>
-                                    <span class="menu-text">Subheaders</span>
+                                    <span class="menu-text">Fitur Tambahan</span>
                                     <i class="menu-arrow"></i>
                                 </a>
                                 <div class="menu-submenu">
                                     <i class="menu-arrow"></i>
                                     <ul class="menu-subnav">
-                                        <li class="menu-item menu-item-parent" aria-haspopup="true">
-                                            <span class="menu-link">
-                                                <span class="menu-text">Subheaders</span>
-                                            </span>
+                                        <li class="menu-item menu-item-submenu" aria-haspopup="true"
+                                            data-menu-toggle="hover">
+                                            <a href="javascript:;" class="menu-link menu-toggle">
+                                                <i class="menu-bullet menu-bullet-line"><span></span></i>
+                                                <span class="menu-text">Laboratorium</span>
+                                                <i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu" kt-hidden-height="160"
+                                                style="display: none; overflow: hidden;">
+                                                <i class="menu-arrow"></i>
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Data Alat Pecah</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Laporan Alat Pecah</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </li>
+                                        <li class="menu-item menu-item-submenu" aria-haspopup="true"
+                                            data-menu-toggle="hover">
+                                            <a href="javascript:;" class="menu-link menu-toggle">
+                                                <i class="menu-bullet menu-bullet-line"><span></span></i>
+                                                <span class="menu-text">Kesiswaan</span>
+                                                <i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu" kt-hidden-height="160"
+                                                style="display: none; overflow: hidden;">
+                                                <i class="menu-arrow"></i>
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Jenis Pelanggaran</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Sanksi Pelanggaran</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Rekam Kasus</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Rekapitulasi Kasus</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-users"></i>
+                                    </span>
+                                    <span class="menu-text">Users (Pengguna)</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/subheader/toolbar.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">Toolbar Nav</span>
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Siswa</span>
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/subheader/actions.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">Actions Buttons</span>
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Guru</span>
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/subheader/tabbed.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">Tabbed Nav</span>
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kepala Sekolah</span>
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/subheader/classic.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">Classic</span>
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Administrator</span>
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a href="layout/subheader/none.html" class="menu-link">
-                                                <i class="menu-bullet menu-bullet-dot">
-                                                    <span></span>
-                                                </i>
-                                                <span class="menu-text">None</span>
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Modul Akses Khusus</span>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
-                            <li class="menu-section">
-                                <h4 class="menu-text">Pengaturan Akun</h4>
-                                <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-calendar"></i>
+                                    </span>
+                                    <span class="menu-text">Proses Akademik</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kelompok Mapel</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Sub Kelompok Mapel</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Mata Pelajaran</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jadwal Pelajaran</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Calssroom System</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kompetensi Dasar</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jurnal KBM</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jenis Penilaian dan Bobot</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kegiatan Siswa</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Predikat Mapel / KKM</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Predikat Penilaian Karakter</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Penilaian Diri</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Penilaian Teman</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Aspek Penilaian Sikap</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Butir Sikap</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Predikat Penilaian Sikap</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Deskripsi Penilaian Sikap</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kelulusan Siswa</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-list"></i>
+                                    </span>
+                                    <span class="menu-text">Kehadiran / Absensi</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Guru</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Siswa</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Siswa Harian</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-edit-1" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="menu-text">Penilaian Standar K13</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item menu-item-submenu" aria-haspopup="true"
+                                            data-menu-toggle="hover">
+                                            <a href="javascript:;" class="menu-link menu-toggle">
+                                                <i class="menu-bullet menu-bullet-line"><span></span></i>
+                                                <span class="menu-text">Penilaian Sikap 1</span>
+                                                <i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu" kt-hidden-height="160"
+                                                style="display: none; overflow: hidden;">
+                                                <i class="menu-arrow"></i>
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Jurnal Guru Mapel</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Jurnal Guru BK</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Jurnal Wali Kelas</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Penilaian Diri</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Penilaian Teman</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Penilaian Sikap 2</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item menu-item-submenu" aria-haspopup="true"
+                                            data-menu-toggle="hover">
+                                            <a href="javascript:;" class="menu-link menu-toggle">
+                                                <i class="menu-bullet menu-bullet-line"><span></span></i>
+                                                <span class="menu-text">Pengetahuan</span>
+                                                <i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu" kt-hidden-height="160"
+                                                style="display: none; overflow: hidden;">
+                                                <i class="menu-arrow"></i>
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Lisan</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Tertulis</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Penugasan</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">UTS</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Nilai Akhir</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Keterampilan</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon2-sheet"></i>
+                                    </span>
+                                    <span class="menu-text">Penilaian Borongan</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Ekstrakurikuler</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Prakter Kerja Lapangan</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Presesntasi Siswa</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Catatan Akademik</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Perkembangan Karakter</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Ctt. Perkembangan Karakter</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Absensi Siswa</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Spiritual & Sosial</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Pengetahuan & Ket.</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Pengetahuan & Ket. UTS</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon2-open-text-book"></i>
+                                    </span>
+                                    <span class="menu-text">Lapran Nilai (Raport)</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Rapoert UTS</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Rapoert Akhir</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Hostory Rapoert</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item" aria-haspopup="true">
+                                <a href="#" class="menu-link">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-chat-1"></i>
+                                    </span>
+                                    <span class="menu-text">Forum Diskusi</span>
+                                </a>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-statistics"></i>
+                                    </span>
+                                    <span class="menu-text">Keuangan</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Setting COA</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Setting Sub-COA</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Setting COA Koperasi</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jenis Biaya</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Pembayaran Siswa</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Koperasi</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Laporan Keuangan Kasir</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Cetak Kartu Ujian</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Jurnal Keuangan</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon2-shopping-cart-1"></i>
+                                    </span>
+                                    <span class="menu-text">Koperasi</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Supplier</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kategori Barang</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Produk Jual</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Produk Tidak Jual</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Pembelian</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Pemelihraan</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Penjualan</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Laporan Penjualan</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Laporan Penerimaan</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-book"></i>
+                                    </span>
+                                    <span class="menu-text">Pustaka</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Buku Tamu</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kategori</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Buku</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kartu Pustaka</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Setting</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Peminjaman</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Pengembalian</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item menu-item-submenu" aria-haspopup="true"
+                                            data-menu-toggle="hover">
+                                            <a href="javascript:;" class="menu-link menu-toggle">
+                                                <i class="menu-bullet menu-bullet-line"><span></span></i>
+                                                <span class="menu-text">Laporan</span>
+                                                <i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu" kt-hidden-height="160"
+                                                style="display: none; overflow: hidden;">
+                                                <i class="menu-arrow"></i>
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Pengunjug Siswa</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Pengunjug Lainnya</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Katalog Buku</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Peminjaman /
+                                                                Pengembalian</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Buku Besar</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Kondisi Buku</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Rekap Kondisi Buku</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item" aria-haspopup="true">
+                                                        <a href="#" class="menu-link">
+                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                            <span class="menu-text">Rekap Pengunjung /
+                                                                Tahun</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-globe"></i>
+                                    </span>
+                                    <span class="menu-text">PPDB Online</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Logo Header</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Data Menu PPDB</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Halaman Statis</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Banner Sidebar</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Rekening Bank</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Mapel Formulir</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Dokumen Formulir</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Pendaftaran PPDB</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Informasi Menunggu</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Informasi Lulus</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Informasi Tidak Lulus</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Konfirmasi Pembayaran</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Kirim WhatsApp</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Setting Pendaftaran</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                                <a href="javascript:;" class="menu-link menu-toggle">
+                                    <span class="menu-icon">
+                                        <i class="flaticon-open-box"></i>
+                                    </span>
+                                    <span class="menu-text">SIM Asset</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="menu-submenu">
+                                    <i class="menu-arrow"></i>
+                                    <ul class="menu-subnav">
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Data Supplier</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Data Departemen</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Data Lokasi</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Data Kategori</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Data Barang</span>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="#" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                                                <span class="menu-text">Transaksi Pengadaan</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                         <!--end::Menu Nav-->
@@ -253,7 +1149,9 @@
                                 <ul class="menu-nav">
                                     <li class="menu-item menu-item-here menu-item-submenu menu-item-rel"
                                         data-menu-toggle="click" aria-haspopup="true">
-                                        <h4 class="text-white">Admin Page</h4>
+                                        <h4 class="text-white">Admin Page |
+                                            <small>{{ strtoupper($skl->nama_sekolah ? $skl->nama_sekolah : '') }}</small>
+                                        </h4>
                                     </li>
                                 </ul>
                                 <!--end::Header Nav-->
@@ -262,6 +1160,17 @@
                         <!--end::Header Menu Wrapper-->
                         <!--begin::Topbar-->
                         <div class="topbar">
+                            @if (session('superadmin'))
+                                <div class="topbar-item">
+                                    <a href="#"
+                                        class="btn btn-hover-transparent-secondary font-weight-bold dropdown-toggle"
+                                        id="kt_quick_cart_toggle" data-toggle="dropdown" aria-expanded="false"> <i
+                                            class="la la-institution"></i>Pilih Unit</a>
+                                </div>
+                                <div class="topbar-item">
+                                    <b class="mr-1">|</b>
+                                </div>
+                            @endif
                             <!--begin::User-->
                             <div class="topbar-item">
                                 <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2"
@@ -269,9 +1178,11 @@
                                     <span
                                         class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
                                     <span
-                                        class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">Sean</span>
+                                        class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{ Auth::user()->nama_lengkap }}</span>
                                     <span class="symbol symbol-35 symbol-light-success">
-                                        <span class="symbol-label font-size-h5 font-weight-bold">S</span>
+                                        <span class="symbol-label font-size-h5 font-weight-bold">
+                                            <i class="fa fa-user text-primary"></i>
+                                        </span>
                                     </span>
                                 </div>
                             </div>
@@ -284,31 +1195,6 @@
                 <!--end::Header-->
                 <!--begin::Content-->
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-                    <!--begin::Subheader-->
-                    <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
-                        <div
-                            class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-                            <!--begin::Info-->
-                            <div class="d-flex align-items-baseline flex-wrap mr-5">
-                                <!--begin::Page Title-->
-                                <h5 class="text-dark font-weight-bold my-1 mr-5">Dashboard</h5>
-                                <!--end::Page Title-->
-                                <!--begin::Breadcrumb-->
-                                <ul
-                                    class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
-                                    <li class="breadcrumb-item">
-                                        <a href="" class="text-muted">Admin Page</a>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <a href="" class="text-muted">Dashboard</a>
-                                    </li>
-                                </ul>
-                                <!--end::Breadcrumb-->
-                            </div>
-                            <!--end::Info-->
-                        </div>
-                    </div>
-                    <!--end::Subheader-->
 
                     @yield('content')
 
@@ -344,7 +1230,7 @@
     <div id="kt_quick_user" class="offcanvas offcanvas-right p-10">
         <!--begin::Header-->
         <div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
-            <h3 class="font-weight-bold m-0">Rahmat Ilyas
+            <h3 class="font-weight-bold m-0">{{ Auth::user()->nama_lengkap }}
             </h3>
             <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
                 <i class="ki ki-close icon-xs text-muted"></i>
@@ -361,8 +1247,9 @@
                     <i class="symbol-badge bg-success"></i>
                 </div>
                 <div class="d-flex flex-column">
-                    <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">James Jones</a>
-                    <div class="text-muted mt-1">Application Developer</div>
+                    <a href="#"
+                        class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ Auth::user()->nama_lengkap }}</a>
+                    <div class="text-muted mt-1">{{ Auth::user()->jabatan }}</div>
                     <div class="navi mt-2">
                         <a href="#" class="navi-item">
                             <span class="navi-link p-0 pb-2">
@@ -383,7 +1270,8 @@
                                         <!--end::Svg Icon-->
                                     </span>
                                 </span>
-                                <span class="navi-text text-muted text-hover-primary">admin@test.com</span>
+                                <span
+                                    class="navi-text text-muted text-hover-primary">{{ Auth::user()->email }}</span>
                             </span>
                         </a>
                         <a href="{{ url('admin/logout') }}"
@@ -392,70 +1280,163 @@
                 </div>
             </div>
             <!--end::Header-->
+
+            <div class="separator separator-dashed mt-8 mb-5"></div>
+
+            <div class="navi navi-spacer-x-0 p-0">
+                <!--begin::Item-->
+                <a href="custom/apps/user/profile-1/personal-information.html" class="navi-item">
+                    <div class="navi-link">
+                        <div class="symbol symbol-40 bg-light mr-3">
+                            <div class="symbol-label">
+                                <i class="fa fa-user text-success"></i>
+                            </div>
+                        </div>
+                        <div class="navi-text">
+                            <div class="font-weight-bold">My Profile</div>
+                            <div class="text-muted">
+                                Account settings and more
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!--end:Item-->
+                <!--begin::Item-->
+                <a href="custom/apps/user/profile-3.html" class="navi-item">
+                    <div class="navi-link">
+                        <div class="symbol symbol-40 bg-light mr-3">
+                            <div class="symbol-label">
+                                <i class="fa fa-envelope text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="navi-text">
+                            <div class="font-weight-bold">Messages</div>
+                            <div class="text-muted">Inbox and tasks</div>
+                        </div>
+                    </div>
+                </a>
+                <!--end:Item-->
+            </div>
         </div>
         <!--end::Content-->
     </div>
     <!-- end::User Panel-->
-    <script>
-        var KTAppSettings = {
-            "breakpoints": {
-                "sm": 576,
-                "md": 768,
-                "lg": 992,
-                "xl": 1200,
-                "xxl": 1400
-            },
-            "colors": {
-                "theme": {
-                    "base": {
-                        "white": "#ffffff",
-                        "primary": "#3699FF",
-                        "secondary": "#E5EAEE",
-                        "success": "#1BC5BD",
-                        "info": "#8950FC",
-                        "warning": "#FFA800",
-                        "danger": "#F64E60",
-                        "light": "#E4E6EF",
-                        "dark": "#181C32"
-                    },
-                    "light": {
-                        "white": "#ffffff",
-                        "primary": "#E1F0FF",
-                        "secondary": "#EBEDF3",
-                        "success": "#C9F7F5",
-                        "info": "#EEE5FF",
-                        "warning": "#FFF4DE",
-                        "danger": "#FFE2E5",
-                        "light": "#F3F6F9",
-                        "dark": "#D6D6E0"
-                    },
-                    "inverse": {
-                        "white": "#ffffff",
-                        "primary": "#ffffff",
-                        "secondary": "#3F4254",
-                        "success": "#ffffff",
-                        "info": "#ffffff",
-                        "warning": "#ffffff",
-                        "danger": "#ffffff",
-                        "light": "#464E5F",
-                        "dark": "#ffffff"
-                    }
-                },
-                "gray": {
-                    "gray-100": "#F3F6F9",
-                    "gray-200": "#EBEDF3",
-                    "gray-300": "#E4E6EF",
-                    "gray-400": "#D1D3E0",
-                    "gray-500": "#B5B5C3",
-                    "gray-600": "#7E8299",
-                    "gray-700": "#5E6278",
-                    "gray-800": "#3F4254",
-                    "gray-900": "#181C32"
-                }
-            },
-            "font-family": "Poppins"
-        };
-    </script>
+    @if (session('superadmin'))
+        <!--begin::Quick Cart-->
+        <div id="kt_quick_cart" class="offcanvas offcanvas-right p-10">
+            <!--begin::Header-->
+            <div class="offcanvas-header d-flex align-items-center justify-content-between pb-7">
+                <h4 class="font-weight-bold m-0">Pilih Unit Sekolah</h4>
+                <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_cart_close">
+                    <i class="ki ki-close icon-xs text-muted"></i>
+                </a>
+            </div>
+            <!--end::Header-->
+            <!--begin::Content-->
+            <div class="offcanvas-content">
+                <!--begin::Wrapper-->
+                <div class="offcanvas-wrapper mb-5 scroll-pull">
+                    @foreach ($sekolah->all() as $schl)
+                        <div class="d-flex align-items-center justify-content-between py-8">
+                            <div class="d-flex flex-column mr-2">
+                                <a href="{{ url('set-sys/' . $schl->id_identitas_sekolah . '') }}"
+                                    class="font-weight-bold text-dark-75 font-size-lg text-hover-primary">{{ strtoupper($schl->nama_sekolah) }}</a>
+                                <span class="text-muted">{{ $schl->alamat_sekolah }}</span>
+                            </div>
+                            <a href="{{ url('set-sys/' . $schl->id_identitas_sekolah . '') }}"
+                                class="symbol symbol-50 flex-shrink-0 symbol-circle symbol-primary">
+                                <span class="symbol-label font-size-h3 font-weight-boldest">
+                                    <i class="fa fa-school text-white"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="separator separator-solid"></div>
+                    @endforeach
+                </div>
+                <!--end::Wrapper-->
+                <!--begin::Purchase-->
+                <div class="offcanvas-footer">
+                    <div class="text-right">
+                        <a href="{{ url('set-sys') }}" role="button" class="btn btn-warning text-weight-bold"><i
+                                class="la la-exchange"></i> Lihat Lainnya</a>
+                        <button type="button" class="btn btn-success text-weight-bold" data-toggle="modal"
+                            data-target="#modal-add-unit"><i class="la la-plus"></i>
+                            Tambah Unit</button>
+                    </div>
+                </div>
+                <!--end::Purchase-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Quick Cart-->
+
+        <!-- Modal Tambah -->
+        <div class="modal fade" id="modal-add-unit" data-backdrop="static" tabindex="-1" role="dialog"
+            aria-labelledby="modal-add" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-addLabel">Tambah Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <form method="post" action="{{ url('admin/' . $skl->keyword . '/store/sekolah') }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Nama Sekolah</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" name="nama_sekolah"
+                                            value="{{ old('nama_sekolah') }}" placeholder="Nama Sekolah.."
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">NPSN</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" name="npsn"
+                                            value="{{ old('npsn') }}" placeholder="NPSN.." required />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">NSS</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" name="nss"
+                                            value="{{ old('nss') }}" placeholder="NSS.." required />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Alamat Sekolah</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" name="alamat_sekolah"
+                                            value="{{ old('alamat_sekolah') }}" placeholder="Alamat Sekolah.."
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Direktori</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" name="keyword"
+                                            placeholder="Direktori.." required />
+                                        @if ($errors->has('keyword'))
+                                            <span class="text-danger">{{ $errors->first('keyword') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-primary font-weight-bold"
+                                data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-success font-weight-bold">Simpan Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
     <!--end::Global Config-->
     <!--begin::Global Theme Bundle(used by all pages)-->
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js?v=7.0.5') }}"></script>
@@ -467,6 +1448,33 @@
     <!--end::Page Vendors-->
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{ asset('assets/js/pages/widgets.js?v=7.0.5') }}"></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/toastr.js?v=7.0.5') }}"></script>
+
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js?v=7.0.5') }}"></script>
+    <script src="{{ asset('assets/js/pages/crud/datatables/basic/scrollable.js?v=7.0.5') }}"></script>
+
+    <script src="{{ asset('assets/js/pages/crud/forms/widgets/select2.js?v=7.0.5') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+            $('[data-toggle1="tooltip"]').tooltip()
+
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", "Berhasil Diproses");
+            @endif
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    toastr.error("{{ $error }}", "Terjadi Kesalahn");
+                @endforeach
+            @endif
+
+            @if ($errors->has('keyword'))
+                $('#modal-add-unit').modal('show');
+            @endif
+        })
+    </script>
+    @yield('javascript')
     <!--end::Page Scripts-->
 </body>
 <!--end::Body-->

@@ -14,4 +14,9 @@ class User extends Authenticatable
     protected $primaryKey = "id_user";
     protected $guard = 'admin';
     protected $guarded = [];
+
+    public function is_skl()
+    {
+        return $this->hasOne(IdentitasSekolah::class, 'id_identitas_sekolah', 'id_identitas_sekolah');
+    }
 }

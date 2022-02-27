@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\User;
+
 class AuthAdminController extends Controller
 {
     public function __construct()
@@ -20,29 +22,36 @@ class AuthAdminController extends Controller
 
     public function login(Request $request)
     {
-        config()->set('auth.defaults.guard', 'admin');
-
+        
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required'
         ]);
-
+        
         $credential = [
             'username' => $request->username,
             'password' => $request->password,
-        ];;
+        ];
 
-        if (Auth::attempt($credential)) {
-            $auth = Auth::user();
-            if ($auth->level == 'admin') {
-                // dd($auth);
-                Auth::guard('admin')->attempt($credential, $request->filled('remember'));
-                return redirect()->route('admin.home');
-                exit();
+        $password = hash("sha512", md5($request->password));
+        $passwords = md5($request->password);
+
+        $user = User::where('username', $request->username)->where('password', $password)->first();
+        if ($user) {
+            config()->set('auth.defaults.guard', 'admin');
+            Auth::login($user);
+            Auth::guard('admin')->attempt($credential, $request->filled('remember'));
+            if ($user->is_skl) {
+                session(['identitas_sekolah' => $user->is_skl]);
+                return redirect('admin/' . $user->is_skl->keyword);
+            } else {
+                session(['superadmin' => true]);
+                return redirect('set-sys');
             }
-            Auth::guard('admin')->logout();
+            
         }
 
+        Auth::guard('admin')->logout();
         return redirect()->back()->withInput($request->only('username', 'password'))->withErrors(['error' => ['Username atau password yang anda masukkan salah!']]);
     }
 
@@ -52,6 +61,6 @@ class AuthAdminController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect('/admin');
+        return redirect('/admin/login');
     }
 }
