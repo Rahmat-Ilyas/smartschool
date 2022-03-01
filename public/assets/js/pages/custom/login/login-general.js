@@ -42,7 +42,7 @@ var KTLogin = function() {
 				},
 				plugins: {
                     trigger: new FormValidation.plugins.Trigger(),
-                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    // submitButton: new FormValidation.plugins.SubmitButton(),
                     //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
 					bootstrap: new FormValidation.plugins.Bootstrap()
 				}

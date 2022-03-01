@@ -12,11 +12,17 @@ class User extends Authenticatable
 
     protected $table = 'rb_users';
     protected $primaryKey = "id_user";
+    public $timestamps = false;
     protected $guard = 'admin';
     protected $guarded = [];
 
     public function is_skl()
     {
         return $this->hasOne(IdentitasSekolah::class, 'id_identitas_sekolah', 'id_identitas_sekolah');
+    }
+
+    public function user_modul()
+    {
+        return $this->hasMany(UserModul::class, 'id_user');
     }
 }

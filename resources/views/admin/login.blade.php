@@ -1,18 +1,30 @@
 <!DOCTYPE html>
+<!--
+Template Name: Metronic - Bootstrap 4 HTML, React, Angular 9 & VueJS Admin Dashboard Theme
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: https://1.envato.market/EA4JP
+Renew Support: https://1.envato.market/EA4JP
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
 <html lang="en">
 <!--begin::Head-->
 
 <head>
-    <base href="../../../../">
+    <base href="../../../">
     <meta charset="utf-8" />
-    <title>Login Page - Admin</title>
+    <title>Login Page | Smart School</title>
     <meta name="description" content="Login page example" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <!--end::Fonts-->
     <!--begin::Page Custom Styles(used by this page)-->
-    <link href="{{ asset('assets/css/pages/login/classic/login-4.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/pages/login/login-1.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
     <!--end::Page Custom Styles-->
     <!--begin::Global Theme Styles(used by all pages)-->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
@@ -28,7 +40,7 @@
     <link href="{{ asset('assets/css/themes/layout/brand/dark.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/themes/layout/aside/dark.css?v=7.0.5') }}" rel="stylesheet" type="text/css" />
     <!--end::Layout Themes-->
-    <link rel="shortcut icon" href="{{ asset('assets/media/logos/logo-fav.png') }}"/>
+    <link rel="shortcut icon" href="{{ asset('assets/media/logos/logo-fav.png') }}" />
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -38,36 +50,72 @@
     <!--begin::Main-->
     <div class="d-flex flex-column flex-root">
         <!--begin::Login-->
-        <div class="login login-4 login-signin-on d-flex flex-row-fluid" id="kt_login">
-            <div class="d-flex flex-center flex-row-fluid bgi-size-cover bgi-position-top bgi-no-repeat"
-                style="background-image: url('{{ asset('assets/media/bg/bg-4.jpg') }}');">
-                <div class="login-form text-center p-7 position-relative overflow-hidden">
-                    <!--begin::Login Header-->
-                    <div class="d-flex flex-center mb-5">
-                        <a href="#">
-                            <img src="{{ asset('assets/media/logos/tutwuri.png') }}" class="max-h-100px" alt="" />
-                        </a>
-                    </div>
-                    <!--end::Login Header-->
-                    <!--begin::Login Sign in form-->
-                    <div class="login-signin">
-                        <div class="mb-10">
-                            <h1 class="text-white">SMART <b class="text-dark">SCHOOL</b></h1>
-                            <div class="text-white font-weight-bold">Sistem Informasi Akademik Sekolah
-                                {{ date('Y') }}</div>
-                            <hr class="border-white">
-                        </div>
-                        <form class="form" id="kt_login_signin_form" method="post"
+        <div class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white"
+            id="kt_login">
+            <!--begin::Aside-->
+            <div class="login-aside d-flex flex-column flex-row-auto" style="background-color: #F2C98A;">
+                <!--begin::Aside Top-->
+                <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
+                    <!--begin::Aside header-->
+                    <a href="#" class="text-center mb-10">
+                        <img src="{{ asset('assets/media/logos/tutwuri.png') }}" class="max-h-100px" alt="" />
+                        <img src="{{ asset('assets/media/logos/logo-sm.png') }}" class="max-h-80px" alt="" />
+                    </a>
+                    <!--end::Aside header-->
+                    <!--begin::Aside title-->
+                    <h3 class="font-weight-bolder text-center font-size-h4 font-size-h1-lg" style="color: #986923;">
+                        Selamat Datang di Smart School
+                        <br />
+                        Sistem Informasi Akademik Sekolah {{ date('Y') }}
+                    </h3>
+                    <!--end::Aside title-->
+                </div>
+                <!--end::Aside Top-->
+                <!--begin::Aside Bottom-->
+                <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center"
+                    style="background-image: url({{ asset('assets/media/svg/illustrations/login.png') }})"></div>
+                <!--end::Aside Bottom-->
+            </div>
+            <!--begin::Aside-->
+            <!--begin::Content-->
+            <div
+                class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
+                <!--begin::Content body-->
+                <div class="d-flex flex-column-fluid flex-center">
+                    <!--begin::Signin-->
+                    <div class="login-form login-signin">
+                        <!--begin::Form-->
+                        <form class="form" novalidate="novalidate" method="post" id="kt_login_signin_form"
                             action="{{ route('admin.login.submit') }}">
                             @csrf
-                            <div class="form-group mb-5">
-                                <input class="form-control h-auto form-control-solid py-4 px-8" type="text" required
-                                    placeholder="Username" name="username" autocomplete="off"
+                            <!--begin::Title-->
+                            <div class="pb-13 pt-lg-0 pt-5">
+                                <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Login to
+                                    <b><span class="text-warning">SMART</span><span
+                                            class="text-primary">SCHOOL</span></b>
+                                </h3>
+                                <span class="text-muted font-weight-bold font-size-h4">Silahkan masukkan informasi akun
+                                    anda!</span>
+                            </div>
+                            <!--begin::Title-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <label class="font-size-h6 font-weight-bolder text-dark">Username</label>
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text"
+                                    name="username" autocomplete="off" placeholder="Username.."
                                     value="{{ old('username') }}" />
                             </div>
-                            <div class="form-group mb-5">
-                                <input class="form-control h-auto form-control-solid py-4 px-8" type="password" required
-                                    placeholder="Password" name="password" />
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between mt-n5">
+                                    <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
+                                    <a href="javascript:;"
+                                        class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5"
+                                        id="kt_login_forgot">Forgot Password ?</a>
+                                </div>
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg"
+                                    type="password" name="password" autocomplete="off" placeholder="Password.." />
                                 @if ($errors->has('error'))
                                     <div class="mt-2 text-left">
                                         <span class="text-danger">{{ $errors->first('error') }}</span>
@@ -81,13 +129,107 @@
                                         <span></span>Remember me</label>
                                 </div>
                             </div>
-                            <button class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4" type="submit">Login
-                                In</button>
+                            <!--end::Form group-->
+                            <!--begin::Action-->
+                            <div class="pb-lg-0 pb-5">
+                                <button type="submit"
+                                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Login</button>
+                            </div>
+                            <!--end::Action-->
                         </form>
+                        <!--end::Form-->
                     </div>
-                    <!--end::Login Sign in form-->
+                    <!--end::Signin-->
+                    <!--begin::Signup-->
+                    <div class="login-form login-signup">
+                        <!--begin::Form-->
+                        <form class="form" novalidate="novalidate" id="kt_login_signup_form">
+                            <!--begin::Title-->
+                            <div class="pb-13 pt-lg-0 pt-5">
+                                <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Sign Up</h3>
+                                <p class="text-muted font-weight-bold font-size-h4">Enter your details to create your
+                                    account</p>
+                            </div>
+                            <!--end::Title-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+                                    type="text" placeholder="Fullname" name="fullname" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+                                    type="email" placeholder="Email" name="email" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+                                    type="password" placeholder="Password" name="password" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+                                    type="password" placeholder="Confirm password" name="cpassword"
+                                    autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <label class="checkbox mb-0">
+                                    <input type="checkbox" name="agree" />I Agree the
+                                    <a href="#">terms and conditions</a>.
+                                    <span></span></label>
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group d-flex flex-wrap pb-lg-0 pb-3">
+                                <button type="button" id="kt_login_signup_submit"
+                                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
+                                <button type="button" id="kt_login_signup_cancel"
+                                    class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</button>
+                            </div>
+                            <!--end::Form group-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Signup-->
+                    <!--begin::Forgot-->
+                    <div class="login-form login-forgot">
+                        <!--begin::Form-->
+                        <form class="form" novalidate="novalidate" id="kt_login_forgot_form">
+                            <!--begin::Title-->
+                            <div class="pb-13 pt-lg-0 pt-5">
+                                <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">Forgotten Password
+                                    ?</h3>
+                                <p class="text-muted font-weight-bold font-size-h4">Enter your email to reset your
+                                    password</p>
+                            </div>
+                            <!--end::Title-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
+                                    type="email" placeholder="Email" name="email" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+                            <!--begin::Form group-->
+                            <div class="form-group d-flex flex-wrap pb-lg-0">
+                                <button type="button" id="kt_login_forgot_submit"
+                                    class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4">Submit</button>
+                                <button type="button" id="kt_login_forgot_cancel"
+                                    class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">Cancel</button>
+                            </div>
+                            <!--end::Form group-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Forgot-->
                 </div>
+                <!--end::Content body-->
             </div>
+            <!--end::Content-->
         </div>
         <!--end::Login-->
     </div>
@@ -163,7 +305,7 @@
     <script src="{{ asset('assets/js/scripts.bundle.js?v=7.0.5') }}"></script>
     <!--end::Global Theme Bundle-->
     <!--begin::Page Scripts(used by this page)-->
-    {{-- <script src="{{ asset('assets/js/pages/custom/login/login-general.js?v=7.0.5') }}"></script> --}}
+    <script src="{{ asset('assets/js/pages/custom/login/login-general.js?v=7.0.5') }}"></script>
     <!--end::Page Scripts-->
 </body>
 <!--end::Body-->

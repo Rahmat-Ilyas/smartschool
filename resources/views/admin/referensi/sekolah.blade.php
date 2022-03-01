@@ -46,7 +46,7 @@
                                         <i class="fa fa-info-circle"></i>
                                     </div>
                                     <div class="alert-text">
-                                        <b>PENTING</b> - Admin untuk Unit ini belum ada, <a href="#"
+                                        <b>PENTING</b> - Admin untuk Unit ini belum ada, <a href="{{ url('admin/' . $skl->keyword . '/user/administrator') }}"
                                             class="text-white"><u>Klik disini</u></a> untuk menambahkan, dan Pastikan
                                         semua data dimenu Referensi Dilengkapi!
                                     </div>

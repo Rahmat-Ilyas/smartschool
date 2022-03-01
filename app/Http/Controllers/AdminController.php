@@ -14,6 +14,7 @@ use App\Models\JenisPtk;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Kepegawaian;
+use App\Models\UserModul;
 
 class AdminController extends Controller
 {
@@ -124,6 +125,36 @@ class AdminController extends Controller
             Kelas::create($data);
 
             return back()->with('success', 'Data Kelas berhasil ditambahkan');
+        } else if ($target == 'administrator') {
+            $this->validate($request, [
+                'username' => 'unique:rb_users|alpha_dash',
+            ]);
+
+            if ($request->foto_) {
+                $file = $request->file('foto_');
+                $nama_file = $request->level . '-' . $request->id_identitas_sekolah . '-' . date('ymdhis') . '.' . $file->getClientOriginalExtension();
+                $request['foto'] = $nama_file;
+                $file->move(public_path('img/admin'), $nama_file);
+            } else {
+                $request['foto'] = '';
+            }
+            $request['password'] = hash("sha512", md5($request->password));
+            $request['jabatan'] = '';
+            $request['aktif'] = 'Y';
+            $data = $request->except(['foto_', 'akses']);
+            $user =  User::create($data);
+
+            if ($request->akses) {
+                foreach ($request->akses as $aks) {
+                    UserModul::create([
+                        'id_user' => $user->id_user,
+                        'id_modul' => $aks,
+                        'level' => $request->level,
+                    ]);
+                }
+            }
+
+            return back()->with('success', 'Data Akses Admin berhasil ditambahkan');
         }
     }
 
@@ -264,6 +295,37 @@ class AdminController extends Controller
             $get_data->save();
 
             return back()->with('success', 'Data Jurusan berhasil di update');
+        } else if ($target == 'administrator') {
+            $get_data = User::where('id_user', $request->id_user)->first();
+            $except = ['_token', 'foto_', 'akses'];
+            if ($request->foto_) {
+                $file = $request->file('foto_');
+                $file->move(public_path('img/admin'), $request->foto);
+            }
+
+            if ($request->password) {
+                $request['password'] = hash("sha512", md5($request->password));
+            } else {
+                array_push($except, 'password');
+            }
+
+            if ($request->akses) {
+                UserModul::where('id_user', $get_data->id_user)->delete();
+                foreach ($request->akses as $aks) {
+                    UserModul::create([
+                        'id_user' => $get_data->id_user,
+                        'id_modul' => $aks,
+                        'level' => $request->level,
+                    ]);
+                }
+            }
+
+            foreach ($request->except($except) as $keys => $data) {
+                $get_data->$keys = $data;
+            }
+            $get_data->save();
+
+            return back()->with('success', 'Data Akses Admin berhasil di update');
         }
     }
 
@@ -317,6 +379,11 @@ class AdminController extends Controller
             } else {
                 return redirect()->back()->withErrors(['error' => ['Gagal Hapus, Terdapat ' . count($get_data->siswa) . ' Siswa untuk Kelas Ini.']]);
             }
+        } else if ($target == 'administrator') {
+            $get_data = User::where('id_user', $id)->first();
+            $get_data->delete();
+            UserModul::where('id_user', $id)->delete();
+            return back()->with('success', 'Data Akses Admin berhasil dihapus');
         }
     }
 

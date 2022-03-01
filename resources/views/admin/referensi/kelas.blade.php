@@ -392,7 +392,6 @@
 @section('javascript')
     <script>
         $(document).ready(function() {
-            $('.select2').select2();
             $('#nav-kelas').addClass('menu-item-active').parents('.menu-item-submenu').addClass(
                 'menu-item-active menu-item-open');
         })

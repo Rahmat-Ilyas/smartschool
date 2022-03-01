@@ -309,8 +309,8 @@ $sekolah = new App\Models\IdentitasSekolah();
                                 <div class="menu-submenu">
                                     <i class="menu-arrow"></i>
                                     <ul class="menu-subnav">
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-siswa" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/user/siswa') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Siswa</span>
                                             </a>
@@ -327,8 +327,8 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Kepala Sekolah</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-administrator" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/user/administrator') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Administrator</span>
                                             </a>
@@ -1457,7 +1457,8 @@ $sekolah = new App\Models\IdentitasSekolah();
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
-            $('[data-toggle1="tooltip"]').tooltip()
+            $('[data-toggle1="tooltip"]').tooltip();
+            $('.select2').select2();
 
             @if (session('success'))
                 toastr.success("{{ session('success') }}", "Berhasil Diproses");

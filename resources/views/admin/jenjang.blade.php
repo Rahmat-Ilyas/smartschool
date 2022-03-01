@@ -1,4 +1,4 @@
-a@php
+@php
 if (!session('superadmin')) {
     $skl = session('identitas_sekolah');
     header('Location: ' . url('admin/' . $skl->keyword));
