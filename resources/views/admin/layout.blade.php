@@ -315,14 +315,14 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Siswa</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-guru" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/user/guru') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Guru</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-kepala-sekolah" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/user/kepala-sekolah') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Kepala Sekolah</span>
                                             </a>
@@ -333,12 +333,12 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Administrator</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        {{-- <li class="menu-item" aria-haspopup="true">
                                             <a href="#" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Modul Akses Khusus</span>
                                             </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
                             </li>
@@ -353,8 +353,8 @@ $sekolah = new App\Models\IdentitasSekolah();
                                 <div class="menu-submenu">
                                     <i class="menu-arrow"></i>
                                     <ul class="menu-subnav">
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-kelompok-mapel" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/proses-akademik/kelompok-mapel') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Kelompok Mapel</span>
                                             </a>

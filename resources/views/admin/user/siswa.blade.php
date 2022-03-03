@@ -2,11 +2,25 @@
 @section('content')
     @php
     $skl = session('identitas_sekolah');
-    $siswa = new App\Models\Siswa();
-    $kelas = new App\Models\Kelas();
+    $siswas = new App\Models\Siswa();
+    $kelas_ = new App\Models\Kelas();
+
+    $angkatan = [];
+    $get_angkatan = $siswas->select('angkatan')->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->groupBy('angkatan')->orderBy('angkatan', 'desc')->get();
+    foreach ($get_angkatan as $sws) {
+        $angkatan[] = $sws->angkatan;
+    }
+
+    $set_angkatan = request()->get('angkatan') ? request()->get('angkatan') : $angkatan[0];
+    $set_kelas = request()->get('kelas') ? request()->get('kelas') : null;
+    if ($set_kelas) {
+        $siswa = $siswas->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->where('angkatan', $set_angkatan)->where('id_kelas', $set_kelas)->get();
+        $class_name = $kelas_->where('id_kelas', $set_kelas)->first()->nama_kelas;
+    } else {
+        $siswa = $siswas->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->where('angkatan', $set_angkatan)->get();
+    }
     
-    $siswa = $siswa->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->get();
-    $kelas = $kelas->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->get();
+    $kelas = $kelas_->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->get();
     @endphp
 
     <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
@@ -61,21 +75,33 @@
                         </div>
                         <div class="col-sm-2">
                             <label>Angkatan</label>
-                            <select name="" id="" class="form-control form-control-sm">
-                                <option value="">2022</option>
+                            <select name="" id="set_angkatan" class="form-control form-control-sm">
+                                @foreach ($angkatan as $agk)
+                                    <option value="{{ $agk }}">{{ $agk }}</option>
+                                @endforeach
                             </select>
+                            <script>
+                                document.getElementById("set_angkatan").value = "{{ $set_angkatan }}";
+                            </script>
                         </div>
                         <div class="col-sm-3">
                             <label>Kelas</label>
-                            <select name="" id="" class="form-control form-control-sm">
+                            <select name="" id="set_kelas" class="form-control form-control-sm">
                                 <option value="">.::Pilih Kelas::.</option>
                                 @foreach ($kelas as $kls)
-                                <option value="{{ $kls->kelas_id }}">{{ $kls->nama_kelas }}</option>
+                                    <option value="{{ $kls->id_kelas }}">{{ $kls->nama_kelas }}</option>
                                 @endforeach
                             </select>
+                            <script>
+                                document.getElementById("set_kelas").value = "{{ $set_kelas }}";
+                            </script>
+                        </div>
+                        <div class="col-sm-3 pt-8">
+                            <button class="btn btn-secondary btn-sm"><i class="fa fa-print"></i> Cetak Data</button>
                         </div>
                     </div>
                     <hr>
+                    <h4 class="text-center">Data Siswa Angkatan {{ $set_angkatan }} {{ $set_kelas ? $class_name : '' }}</h4>
                     <!--begin: Datatable-->
                     <table class="table table-separate table-head-custom table-checkable mt-2" id="dataTable">
                         <thead>
@@ -101,7 +127,8 @@
                                     <td>{{ $dta->angkatan }}</td>
                                     <td>{{ $dta->id_sesi }}</td>
                                     <td>{{ $dta->jurusan->nama_jurusan }}</td>
-                                    <td class="text-{{ $dta->status_siswa == 'Aktif' ? 'success' : 'warning' }}">{{ $dta->status_siswa }}</td>
+                                    <td class="text-{{ $dta->status_siswa == 'Aktif' ? 'success' : 'warning' }}">
+                                        {{ $dta->status_siswa }}</td>
                                     <td>
                                         <a href="#" class="btn btn-sm btn-clean btn-icon" data-toggle="modal"
                                             data-target="#modal-edit{{ $no }}" data-toggle1="tooltip"
@@ -142,7 +169,8 @@
                             <div class="form-group row mb-3">
                                 <label class="col-3 col-form-label">Nama Kurikulum</label>
                                 <div class="col-9">
-                                    <input type="hidden" name="id_identitas_sekolah" value="{{ $skl->id_identitas_sekolah }}">
+                                    <input type="hidden" name="id_identitas_sekolah"
+                                        value="{{ $skl->id_identitas_sekolah }}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
@@ -162,7 +190,7 @@
                             <div class="form-group row mb-3">
                                 <label class="col-3 col-form-label">Raport</label>
                                 <div class="col-9">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -189,7 +217,8 @@
                             <i aria-hidden="true" class="ki ki-close"></i>
                         </button>
                     </div>
-                    <form method="post" action="{{ url('admin/' . $skl->keyword . '/delete/tingkat/'.$dta->id_tingkat) }}">
+                    <form method="post"
+                        action="{{ url('admin/' . $skl->keyword . '/delete/tingkat/' . $dta->id_tingkat) }}">
                         @csrf
                         <div class="modal-body">
                             <p>Apa anda yakin untuk hapus Data ini?</p>
@@ -211,6 +240,27 @@
         $(document).ready(function() {
             $('#nav-siswa').addClass('menu-item-active').parents('.menu-item-submenu').addClass(
                 'menu-item-active menu-item-open');
+
+            $('#set_angkatan').change(function(e) {
+                e.preventDefault();
+                var angkatan = $(this).val();
+                var kelas = $('#set_kelas').val();
+
+                if (kelas) 
+                    location.href = "{{ url('admin/' . $skl->keyword . '/user/siswa?angkatan=') }}" + angkatan + "&kelas=" + kelas;
+                else 
+                    location.href = "{{ url('admin/' . $skl->keyword . '/user/siswa?angkatan=') }}" + angkatan;
+            });
+
+            $('#set_kelas').change(function(e) {
+                e.preventDefault();
+                var kelas = $(this).val();
+                var angkatan = $('#set_angkatan').val();
+                if (kelas) 
+                    location.href = "{{ url('admin/' . $skl->keyword . '/user/siswa?angkatan=') }}" + angkatan + "&kelas=" + kelas;
+                else 
+                    location.href = "{{ url('admin/' . $skl->keyword . '/user/siswa?angkatan=') }}" + angkatan;
+            });
         })
     </script>
 @endsection

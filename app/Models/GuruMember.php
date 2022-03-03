@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Guru extends Model
+class GuruMember extends Model
 {
     use HasFactory;
 
-    protected $table = 'rb_guru';
-    protected $primaryKey = "id_guru";
+    protected $table = 'rb_guru_membership';
+    protected $primaryKey = "id_membership";
     public $timestamps = false;
     protected $guarded = [];
-
-    public function member($id)
-    {
-        return GuruMember::where('id_guru', $id)->first();
-    }    
 }
