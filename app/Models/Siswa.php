@@ -18,4 +18,9 @@ class Siswa extends Model
     {
         return $this->belongsTo(Jurusan::class, 'id_jurusan');
     }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
 }

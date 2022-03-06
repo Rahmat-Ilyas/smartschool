@@ -231,25 +231,23 @@ $sekolah = new App\Models\IdentitasSekolah();
                                 <div class="menu-submenu">
                                     <i class="menu-arrow"></i>
                                     <ul class="menu-subnav">
-                                        <li class="menu-item menu-item-submenu" aria-haspopup="true"
-                                            data-menu-toggle="hover">
+                                        <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                                             <a href="javascript:;" class="menu-link menu-toggle">
                                                 <i class="menu-bullet menu-bullet-line"><span></span></i>
                                                 <span class="menu-text">Laboratorium</span>
                                                 <i class="menu-arrow"></i>
                                             </a>
-                                            <div class="menu-submenu" kt-hidden-height="160"
-                                                style="display: none; overflow: hidden;">
+                                            <div class="menu-submenu">
                                                 <i class="menu-arrow"></i>
                                                 <ul class="menu-subnav">
-                                                    <li class="menu-item" aria-haspopup="true">
-                                                        <a href="#" class="menu-link">
+                                                    <li class="menu-item" id="nav-lab-data-alat" aria-haspopup="true">
+                                                        <a href="{{ url('admin/' . $skl->keyword . '/fitur-tambahan/lab-data-alat') }}" class="menu-link">
                                                             <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                             <span class="menu-text">Data Alat Pecah</span>
                                                         </a>
                                                     </li>
-                                                    <li class="menu-item" aria-haspopup="true">
-                                                        <a href="#" class="menu-link">
+                                                    <li class="menu-item" id="nav-lab-laporan-alat" aria-haspopup="true">
+                                                        <a href="{{ url('admin/' . $skl->keyword . '/fitur-tambahan/lab-laporan-alat') }}" class="menu-link">
                                                             <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                             <span class="menu-text">Laporan Alat Pecah</span>
                                                         </a>
@@ -264,8 +262,7 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Kesiswaan</span>
                                                 <i class="menu-arrow"></i>
                                             </a>
-                                            <div class="menu-submenu" kt-hidden-height="160"
-                                                style="display: none; overflow: hidden;">
+                                            <div class="menu-submenu">
                                                 <i class="menu-arrow"></i>
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item" aria-haspopup="true">
@@ -514,8 +511,7 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Penilaian Sikap 1</span>
                                                 <i class="menu-arrow"></i>
                                             </a>
-                                            <div class="menu-submenu" kt-hidden-height="160"
-                                                style="display: none; overflow: hidden;">
+                                            <div class="menu-submenu">
                                                 <i class="menu-arrow"></i>
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item" aria-haspopup="true">
@@ -564,8 +560,7 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Pengetahuan</span>
                                                 <i class="menu-arrow"></i>
                                             </a>
-                                            <div class="menu-submenu" kt-hidden-height="160"
-                                                style="display: none; overflow: hidden;">
+                                            <div class="menu-submenu">
                                                 <i class="menu-arrow"></i>
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item" aria-haspopup="true">
@@ -920,8 +915,7 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Laporan</span>
                                                 <i class="menu-arrow"></i>
                                             </a>
-                                            <div class="menu-submenu" kt-hidden-height="160"
-                                                style="display: none; overflow: hidden;">
+                                            <div class="menu-submenu">
                                                 <i class="menu-arrow"></i>
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item" aria-haspopup="true">
