@@ -38,6 +38,16 @@
                         </h3>
                     </div>
                     <div class="card-toolbar">
+                        <div class="dropdown mr-2">
+                            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="la la-file-excel"></i> Import Data
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Download Format</a>
+                                <a class="dropdown-item" href="#">Pilih & Upload File</a>
+                            </div>
+                        </div>
                         <a href="#" class="btn btn-primary font-weight-bolder" data-toggle="modal"
                             data-target="#modal-add"><i class="la la-plus"></i> Tambahkan
                             Data</a>

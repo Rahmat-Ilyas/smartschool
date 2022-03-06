@@ -359,14 +359,14 @@ $sekolah = new App\Models\IdentitasSekolah();
                                                 <span class="menu-text">Kelompok Mapel</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-subkelompok-mapel" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/proses-akademik/subkelompok-mapel') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Sub Kelompok Mapel</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a href="#" class="menu-link">
+                                        <li class="menu-item" id="nav-mata-pelajaran" aria-haspopup="true">
+                                            <a href="{{ url('admin/' . $skl->keyword . '/proses-akademik/mata-pelajaran') }}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot"><span></span></i>
                                                 <span class="menu-text">Mata Pelajaran</span>
                                             </a>
