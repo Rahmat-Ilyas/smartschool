@@ -42,7 +42,7 @@
                                     <label class="col-3 col-form-label">Username</label>
                                     <div class="col-9">
                                         <input type="hidden" name="id_identitas_sekolah" value="{{ $skl->id_identitas_sekolah }}">
-                                        <input class="form-control" type="text" value="{{ $dta->username }}"
+                                        <input class="form-control" type="text" value="{{ $dta ? $dta->username : '' }}"
                                             name="username" placeholder="Username.." />
                                         <small class="text-italic text-danger"><b>Penting!</b> - Pastikan Username ini sama dengan NIY / NIP Kepala Sekolah Pada Data Guru</small>
                                     </div>
@@ -50,7 +50,7 @@
                                 <div class="form-group row mb-3">
                                     <label class="col-3 col-form-label">Nama Lengkap</label>
                                     <div class="col-9">
-                                        <input class="form-control" type="text" value="{{ $dta->nama_lengkap }}" name="nama_lengkap"
+                                        <input class="form-control" type="text" value="{{ $dta ? $dta->nama_lengkap : '' }}" name="nama_lengkap"
                                             placeholder="Nama Lengkap.." />
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@
 @section('javascript')
     <script>
         $(document).ready(function() {
-            $('#nav-kelompok-mapel').addClass('menu-item-active').parents('.menu-item-submenu').addClass(
+            $('#nav-kepala-sekolah').addClass('menu-item-active').parents('.menu-item-submenu').addClass(
                 'menu-item-active menu-item-open');
         })
     </script>

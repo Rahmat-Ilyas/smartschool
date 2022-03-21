@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Akademik;
-use App\Models\Gedung;
 use Illuminate\Http\Request;
 
-use App\Models\User;
 use App\Models\IdentitasSekolah;
+use App\Models\Akademik;
+use App\Models\Gedung;
+use App\Models\User;
 use App\Models\Ruangan;
 use App\Models\Tingkat;
 use App\Models\JenisPtk;

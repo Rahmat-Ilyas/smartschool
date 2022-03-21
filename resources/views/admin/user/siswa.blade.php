@@ -11,7 +11,8 @@
         $angkatan[] = $sws->angkatan;
     }
 
-    $set_angkatan = request()->get('angkatan') ? request()->get('angkatan') : $angkatan[0];
+    $ang = isset($angkatan[0]) ? $angkatan[0] : date('Y');
+    $set_angkatan = request()->get('angkatan') ? request()->get('angkatan') : $ang;
     $set_kelas = request()->get('kelas') ? request()->get('kelas') : null;
     if ($set_kelas) {
         $siswa = $siswas->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->where('angkatan', $set_angkatan)->where('id_kelas', $set_kelas)->get();

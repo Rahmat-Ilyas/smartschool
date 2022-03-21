@@ -5,6 +5,19 @@ if (!session('superadmin')) {
     exit();
 }
 
+$kota = new App\Models\Kota();
+$sekolah = new App\Models\IdentitasSekolah();
+
+$show = 8;
+if (request()->get('district')) {
+    $district = request()->get('district');
+    $get_skl = $sekolah->where('kabupaten_kota', $district)->paginate($show);
+} else {
+    $get_skl = $sekolah->paginate($show);
+}
+
+$kota = $kota->where('provinsi_id', 27)->get();
+
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -42,11 +55,6 @@ if (!session('superadmin')) {
 <!--begin::Body-->
 
 <body>
-    @php
-        $sekolah = new App\Models\IdentitasSekolah();
-        $show = 8;
-        $get_skl = $sekolah->paginate($show);
-    @endphp
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
         <!--begin::Subheader-->
         <div class="container mb-4">
@@ -82,8 +90,11 @@ if (!session('superadmin')) {
                         </div>
                         <div class="d-flex align-items-center ml-3">
                             <div class="input-group input-group-sm input-group-solid">
-                                <select name="" id="" class="form-control">
-                                    <option value="">Pilih Kabupaten/Kota</option>
+                                <select name="" id="district" class="form-control select2">
+                                    <option value="all">All Districts</option>
+                                    @foreach ($kota as $kta)
+                                        <option value="{{ $kta->nama_kota }}">{{ $kta->nama_kota }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -97,7 +108,7 @@ if (!session('superadmin')) {
                         <!--begin::Button-->
                         <a href="#" class="btn btn-light-primary font-weight-bold ml-2" data-toggle="modal"
                             data-target="#modal-add-unit"><i class="fa fa-plus-circle"></i> Tambah Unit</a>
-                        <a href="{{ url('admin/logout') }}"
+                        <a href="{{ url('logout') }}"
                             class="btn btn-light-danger font-weight-bold ml-2 pr-2"><i class="fa fa-power-off"></i></a>
                         <!--end::Button-->
                     </div>
@@ -127,7 +138,8 @@ if (!session('superadmin')) {
                                     <p class="mb-7 text-center">
                                         <a href="#"
                                             class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-0">{{ strtoupper($skl->nama_sekolah) }}</a><br>
-                                        <span class="text-muted font-weight-bold">{{ $skl->alamat_sekolah }}</span>
+                                        <span class="text-muted font-weight-bold">{{ $skl->alamat_sekolah }}</span><br>
+                                        <span class="text-muted font-weight-bold">{{ $skl->kabupaten_kota }}</span>
                                         <hr>
                                     </p>
                                     <div class="mb-7">
@@ -153,7 +165,13 @@ if (!session('superadmin')) {
                             </div>
                         </div>
                     @endforeach
+
                 </div>
+                @if (count($get_skl) <= 0)
+                <div class="text-center pt-5 mt-5">
+                    <h2 class="text-muted font-italic">Tidak ada sekolah ditemukan</h2>
+                </div>
+                @endif
 
                 <!--begin::Pagination-->
                 <div class="mb-10">
@@ -209,7 +227,7 @@ if (!session('superadmin')) {
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>
                 </div>
-                <form method="post" action="{{ url('admin/' . $skl->keyword . '/store/sekolah') }}">
+                <form method="post" action="{{ url('admin/sys/store/sekolah') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="container">
@@ -243,6 +261,17 @@ if (!session('superadmin')) {
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
+                                <label class="col-3 col-form-label">Kabupaten/Kota</label>
+                                <div class="col-9">
+                                    <select name="kabupaten_kota" class="form-control select2" required style="width: 100%">
+                                        <option></option>
+                                        @foreach ($kota as $kta)
+                                            <option value="{{ $kta->nama_kota }}">{{ $kta->nama_kota }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
                                 <label class="col-3 col-form-label">Direktori</label>
                                 <div class="col-9">
                                     <input class="form-control" type="text" name="keyword" placeholder="Direktori.."
@@ -271,12 +300,29 @@ if (!session('superadmin')) {
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js?v=7.0.5') }}"></script>
     <script src="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.js?v=7.0.5') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js?v=7.0.5') }}"></script>
+    <script src="{{ asset('assets/js/pages/crud/forms/widgets/select2.js?v=7.0.5') }}"></script>
     <!--end::Global Theme Bundle-->
     <!--begin::Page Scripts(used by this page)-->
     {{-- <script src="{{ asset('assets/js/pages/custom/login/login-general.js?v=7.0.5') }}"></script> --}}
     <!--end::Page Scripts-->
     <script>
         $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Pilih Kabupaten/Kota"
+            });
+
+            $('#district').change(function (e) { 
+                e.preventDefault();
+                
+                var val = $(this).val();
+                if (val == 'all') location.href="{{ url('set-sys') }}";
+                else location.href="{{ url('set-sys') }}?district="+val;
+            });
+
+            @if (request()->get('district'))
+            $('.select2').val("{{ request()->get('district') }}").trigger('change.select2');;
+            @endif
+
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     toastr.error("{{ $error }}", "Terjadi Kesalahn");

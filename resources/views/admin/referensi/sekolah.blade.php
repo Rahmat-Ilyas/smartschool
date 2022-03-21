@@ -4,8 +4,11 @@
     $skl = session('identitas_sekolah');
     $cek_user = new App\Models\User();
     $sekolah = new App\Models\IdentitasSekolah();
+    $kota = new App\Models\Kota();
+    
     $cek_user = $cek_user->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->first();
     $dta = $sekolah->where('id_identitas_sekolah', $skl->id_identitas_sekolah)->first();
+    $kota = $kota->where('provinsi_id', 27)->get();
     $ex = explode('||', $dta->api_wablas);
     @endphp
 
@@ -102,8 +105,17 @@
                                 <div class="form-group row mb-2">
                                     <label class="col-3 col-form-label">Kabupaten/Kota</label>
                                     <div class="col-9">
-                                        <input class="form-control" type="text" value="{{ $dta->kabupaten_kota }}"
-                                            name="kabupaten_kota" placeholder="Kabupaten/Kota.." />
+                                        <select name="kabupaten_kota" id="kabupaten_kota" class="form-control select2" style="width: 100%">
+                                            <option value="">.::Pilih Kabupaten/Kota::.</option>
+                                            @foreach ($kota as $kta)
+                                                <option value="{{ $kta->nama_kota }}">{{ $kta->nama_kota }}</option>
+                                            @endforeach
+                                        </select>
+                                        <script>
+                                            document.getElementById("kabupaten_kota").value = "{{ $dta->kabupaten_kota }}";
+                                        </script>
+                                        {{-- <input class="form-control" type="text" value="{{ $dta->kabupaten_kota }}"
+                                            name="kabupaten_kota" placeholder="Kabupaten/Kota.." /> --}}
                                     </div>
                                 </div>
                                 <div class="form-group row mb-2">

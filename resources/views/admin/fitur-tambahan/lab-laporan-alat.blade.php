@@ -18,7 +18,7 @@
                         <a href="" class="text-muted">Fitur Tambahan</a>
                     </li>
                      <li class="breadcrumb-item">
-                        <a href="" class="text-muted">Proses Akademik</a>
+                        <a href="" class="text-muted">Laboratorium</a>
                     </li>
                     <li class="breadcrumb-item">
                         <a href="" class="text-muted">Laporan Alat Pecah</a>

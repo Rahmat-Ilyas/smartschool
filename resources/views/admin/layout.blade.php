@@ -6,6 +6,8 @@ if (session('superadmin') && !session('identitas_sekolah')) {
 
 $skl = session('identitas_sekolah');
 $sekolah = new App\Models\IdentitasSekolah();
+$kota = new App\Models\Kota();
+$kota = $kota->where('provinsi_id', 27)->get();
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -1268,7 +1270,7 @@ $sekolah = new App\Models\IdentitasSekolah();
                                     class="navi-text text-muted text-hover-primary">{{ Auth::user()->email }}</span>
                             </span>
                         </a>
-                        <a href="{{ url('admin/logout') }}"
+                        <a href="{{ url('logout') }}"
                             class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">Sign Out</a>
                     </div>
                 </div>
@@ -1407,6 +1409,17 @@ $sekolah = new App\Models\IdentitasSekolah();
                                         <input class="form-control" type="text" name="alamat_sekolah"
                                             value="{{ old('alamat_sekolah') }}" placeholder="Alamat Sekolah.."
                                             required />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Kabupaten/Kota</label>
+                                    <div class="col-9">
+                                        <select name="kabupaten_kota" class="form-control select2" required style="width: 100%">
+                                            <option value="">.::Pilih Kabupaten/Kota::.</option>
+                                            @foreach ($kota as $kta)
+                                                <option value="{{ $kta->nama_kota }}">{{ $kta->nama_kota }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-3">

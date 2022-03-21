@@ -20,14 +20,21 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, $guard)
     {
         switch ($guard) {
-            case 'user':
+            case 'siswa':
                 if (Auth::guard($guard)->check()) {
-                    return redirect()->route('user.home');
+                    return redirect('user/' . session('level_user'));
+                }
+                break;
+            case 'guru':
+                if (Auth::guard($guard)->check()) {
+                    return redirect('user/' . session('level_user'));
                 }
                 break;
             case 'admin':
                 if (Auth::guard($guard)->check()) {
-                    return redirect()->route('admin.home');
+                    $user = Auth::guard($guard)->user();
+                    return redirect('admin/' . $user->is_skl->keyword);
+                    // return redirect()->route('admin.home');
                 }
                 break;
         }

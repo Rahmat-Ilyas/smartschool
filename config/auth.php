@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'user',
     ],
 
     /*
@@ -41,9 +41,14 @@ return [
             'provider' => 'users',
         ],
 
-        'user' => [
+        'siswa' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'siswa',
+        ],
+
+        'guru' => [
+            'driver' => 'session',
+            'provider' => 'guru',
         ],
 
         'admin' => [
@@ -73,6 +78,16 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'siswa' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Siswa::class,
+        ],
+
+        'guru' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Guru::class,
         ],
     ],
 
